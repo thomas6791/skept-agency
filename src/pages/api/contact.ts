@@ -57,10 +57,16 @@ export async function POST({ request }) {
     });
 
     if (result.error) {
-      console.error("Erreur Resend:", result.error);
+      const errorMessage = result.error?.message || JSON.stringify(result.error);
+      console.error("Erreur Resend détaillée:", {
+        error: result.error,
+        message: errorMessage,
+        from: "Contact Form <onboarding@resend.dev>",
+        to: email,
+      });
       return new Response(
         JSON.stringify({
-          message: "Erreur lors de l'envoi de l'email",
+          message: "Erreur lors de l'envoi de l'email: " + errorMessage,
         }),
         {
           status: 500,
@@ -80,10 +86,14 @@ export async function POST({ request }) {
       }
     );
   } catch (error) {
-    console.error("Erreur serveur:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Erreur serveur détaillée:", {
+      error: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return new Response(
       JSON.stringify({
-        message: "Erreur interne du serveur",
+        message: "Erreur interne du serveur: " + errorMessage,
       }),
       {
         status: 500,
