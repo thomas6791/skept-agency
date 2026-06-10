@@ -1,14 +1,23 @@
 import { Resend } from "resend";
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
+export const prerender = false;
 
 export async function POST({ request }) {
-  if (request.method !== "POST") {
-    return new Response(JSON.stringify({ message: "Méthode non autorisée" }), {
-      status: 405,
-      headers: { "Content-Type": "application/json" },
-    });
+  const apiKey = import.meta.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    return new Response(
+      JSON.stringify({
+        message: "Configuration d'erreur : clé API manquante",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
+
+  const resend = new Resend(apiKey);
 
   try {
     const body = await request.json();

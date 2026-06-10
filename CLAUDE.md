@@ -96,3 +96,24 @@ Contenu de l'article en Markdown...
 - **Styling** : CSS/SCSS
 - **JavaScript** : Vanilla JS (sans framework frontend par défaut)
 - **Contenu** : Markdown + Frontmatter YAML
+- **Email** : Resend
+
+## 🚀 Déploiement sur Vercel
+
+Le projet est configuré pour Vercel avec l'adaptateur `@astrojs/vercel`.
+
+### Variables d'environnement requises
+
+- `RESEND_API_KEY` : Clé API Resend pour l'envoi d'emails
+
+### Configuration
+
+1. Créez un fichier `.env.local` localement (ignoré par Git)
+2. Ajoutez vos variables d'environnement sur Vercel via le dashboard
+3. Voir [DEPLOYMENT.md](DEPLOYMENT.md) pour les instructions détaillées
+
+### Routes dynamiques
+
+- La route API `/api/contact` est rendue à la demande (pas pré-rendue)
+- Marquée avec `export const prerender = false;` pour éviter les erreurs de build
+
