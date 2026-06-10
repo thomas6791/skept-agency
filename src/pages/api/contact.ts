@@ -50,11 +50,21 @@ export async function POST({ request }) {
 
     // Envoyer l'email via Resend
     const result = await resend.emails.send({
-      from: "Contact Form <onboarding@resend.dev>", // À remplacer par votre domaine Resend
+      from: "Skept Agency <noreply@skept.fr>",
       to: email,
       subject: "Confirmation de votre demande de contact",
-      html: generateEmailHTML(firstName, lastName, company, phone),
+      html: generateEmailHTML(firstName, lastName, company, phone, email),
     });
+
+    // Envoyer une notification à th@skept.fr
+    if (!result.error) {
+      await resend.emails.send({
+        from: "Skept Agency <noreply@skept.fr>",
+        to: "th@skept.fr",
+        subject: `Nouvelle demande de contact - ${firstName} ${lastName}`,
+        html: generateAdminEmailHTML(firstName, lastName, company, email, phone),
+      });
+    }
 
     if (result.error) {
       const errorMessage = result.error?.message || JSON.stringify(result.error);
@@ -107,7 +117,8 @@ function generateEmailHTML(
   firstName: string,
   lastName: string,
   company: string | undefined,
-  phone: string | undefined
+  phone: string | undefined,
+  email: string
 ): string {
   return `
     <!DOCTYPE html>
@@ -142,6 +153,51 @@ function generateEmailHTML(
           <p style="margin-top: 30px; font-size: 14px; color: #999;">
             Cet email a été généré automatiquement. Veuillez ne pas y répondre directement.
           </p>
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+function generateAdminEmailHTML(
+  firstName: string,
+  lastName: string,
+  company: string | undefined,
+  email: string,
+  phone: string | undefined
+): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          h1 { color: #0066cc; }
+          .info-group { margin: 15px 0; }
+          .label { font-weight: bold; color: #555; }
+          .value { color: #333; margin-left: 10px; }
+          .contact-link { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #0066cc; color: white; text-decoration: none; border-radius: 4px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Nouvelle demande de contact</h1>
+          <p>Une nouvelle personne a soumis une demande de contact via le formulaire.</p>
+
+          <h2>Informations du contact :</h2>
+          <div class="info-group">
+            <span class="label">Nom :</span>
+            <span class="value">${lastName} ${firstName}</span>
+          </div>
+          <div class="info-group">
+            <span class="label">Email :</span>
+            <span class="value"><a href="mailto:${email}">${email}</a></span>
+          </div>
+          ${company ? `<div class="info-group"><span class="label">Entreprise :</span><span class="value">${company}</span></div>` : ""}
+          ${phone ? `<div class="info-group"><span class="label">Téléphone :</span><span class="value"><a href="tel:${phone}">${phone}</a></span></div>` : ""}
+
+          <a href="mailto:${email}" class="contact-link">Répondre au contact</a>
         </div>
       </body>
     </html>

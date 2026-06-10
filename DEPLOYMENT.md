@@ -17,10 +17,13 @@ Après avoir poussé votre code sur GitHub, suivez ces étapes :
      - **Value:** `re_WzeAWqrk_4EyRjNcdhqDhRUuGT1fHDq6E`
      - **Environments:** Sélectionnez les environnements où vous en avez besoin (Production, Preview, Development)
 
-### 3. **Configurer Resend**
-   - Visitez [resend.com](https://resend.com)
-   - Configurez un domaine personnalisé (ex: `no-reply@example.com`)
-   - Remplacez `"Contact Form <onboarding@resend.dev>"` par votre domaine dans `src/pages/api/contact.ts` ligne 58
+### 3. **Configurer le domaine dans l'API**
+   Le formulaire de contact utilisera automatiquement votre domaine configuré.
+   
+   Les emails sont envoyés avec :
+   - **Expéditeur** : `noreply@skept.fr`
+   - **À destination du contact** : Email de confirmation
+   - **À destination admin** : Email de notification à `th@skept.fr`
 
 ### 4. **Déployer**
    - Poussez votre code sur GitHub
