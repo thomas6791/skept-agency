@@ -1,17 +1,23 @@
 ---
-
+import ContactForm from '../components/ContactForm.astro';
 ---
 
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Skept Agency - Agence Web</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<h1>Bienvenue chez Skept Agency</h1>
+		<p>Nous créons des solutions web innovantes pour votre entreprise.</p>
+
+		<section>
+			<h2>Contactez-nous</h2>
+			<ContactForm />
+		</section>
 	</body>
 </html>
